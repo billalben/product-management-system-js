@@ -9,6 +9,8 @@ const $totalPrice = document.querySelector("[data-total-price]");
 const $countInput = document.querySelector("[data-input-count]");
 const $categoryInput = document.querySelector("[data-input-category]");
 const $submitBtn = document.querySelector("[data-submit-btn]");
+const $tableBody = document.querySelector("tbody");
+const $deleteAllBtn = document.querySelector("[data-delete-all]");
 
 const getTotalPrice = () => {
   if ($priceInput.value === "") {
@@ -46,13 +48,15 @@ const clearData = () => {
 };
 
 const showData = () => {
-  if (dataProducts.length === 0) return;
-  let $tableBody = document.querySelector("tbody");
+  if (dataProducts.length === 0) {
+    $deleteAllBtn.style.display = "none";
+    return;
+  }
 
-  dataProducts.forEach((product, index) => {
+  dataProducts.forEach((product, id) => {
     let table = `
       <tr>
-        <td>${index + 1}</td>
+        <td>${id}</td>
         <td>${product.title}</td>
         <td>${product.price}</td>
         <td>${product.taxes}</td>
@@ -64,13 +68,15 @@ const showData = () => {
           <button data-update>Update</button>
         </td>
         <td>
-          <button data-delete>Delete</button>
+          <button onclick="deleteProduct(id)" data-delete>Delete</button>
         </td>
       </tr>
     `;
 
     $tableBody.innerHTML += table;
   });
+
+  $deleteAllBtn.style.display = "block";
 };
 
 $submitBtn.addEventListener("click", () => {
@@ -98,9 +104,26 @@ $submitBtn.addEventListener("click", () => {
   localStorage.setItem("products", JSON.stringify(dataProducts));
 
   clearData();
+  clearTableBody();
   showData();
-
-  console.log(newProduct);
 });
 
 showData();
+
+const deleteProduct = (id) => {
+  dataProducts.splice(id, 1);
+  localStorage.setItem("products", JSON.stringify(dataProducts));
+
+  clearTableBody();
+  showData();
+};
+
+const clearTableBody = () => {
+  $tableBody.innerHTML = "";
+};
+
+$deleteAllBtn.addEventListener("click", () => {
+  localStorage.removeItem("products");
+  clearTableBody();
+  dataProducts = [];
+});

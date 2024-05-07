@@ -92,9 +92,16 @@ input:focus {
   font-weight: bold;
 }
 
-.btn-create {
+.btn-create,
+.btn-delete-all {
   width: 50%;
   height: 48px;
+}
+
+.btn-delete-all {
+  margin-inline: auto;
+  margin-block: 3rem;
+  display: none;
 }
 
 .btn-create,
@@ -113,7 +120,8 @@ table button[data-update]:hover {
   color: #fff;
 }
 
-table button[data-delete]:hover {
+table button[data-delete]:hover,
+.btn-delete-all:hover {
   background-color: #a00d02;
   color: #fff;
 }
