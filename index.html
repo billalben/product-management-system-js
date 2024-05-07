@@ -21,15 +21,37 @@
       <div class="inputs">
         <input type="text" placeholder="title" data-input-title />
         <div class="price">
-          <input type="number" placeholder="price" data-input-price />
-          <input type="number" placeholder="taxes" data-input-tax />
-          <input type="number" placeholder="ads" data-input-ads />
-          <input type="number" placeholder="discount" data-input-discount />
-          <small class="total-price">1234</small>
+          <input
+            onkeyup="getTotalPrice()"
+            type="number"
+            placeholder="price"
+            data-input-price
+          />
+          <input
+            onkeyup="getTotalPrice()"
+            type="number"
+            placeholder="taxes"
+            data-input-tax
+          />
+          <input
+            onkeyup="getTotalPrice()"
+            type="number"
+            placeholder="ads"
+            data-input-ads
+          />
+          <input
+            onkeyup="getTotalPrice()"
+            type="number"
+            placeholder="discount"
+            data-input-discount
+          />
+          <p onkeyup="getTotalPrice()" class="total-price" data-total-price>
+            0
+          </p>
         </div>
         <input type="text" placeholder="count" data-input-count />
         <input type="text" placeholder="category" data-input-category />
-        <button class="btn-create" data-submit>Create</button>
+        <button class="btn-create" data-submit-btn>Create</button>
       </div>
 
       <div class="outputs">
