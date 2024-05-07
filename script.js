@@ -34,8 +34,6 @@ if (localStorage.getItem("products")) {
   dataProducts = JSON.parse(localStorage.getItem("products"));
 }
 
-console.log(dataProducts);
-
 const clearData = () => {
   $titleInput.value = "";
   $priceInput.value = "";
@@ -45,6 +43,34 @@ const clearData = () => {
   $totalPrice.textContent = "0";
   $countInput.value = "";
   $categoryInput.value = "";
+};
+
+const showData = () => {
+  if (dataProducts.length === 0) return;
+  let $tableBody = document.querySelector("tbody");
+
+  dataProducts.forEach((product, index) => {
+    let table = `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${product.title}</td>
+        <td>${product.price}</td>
+        <td>${product.taxes}</td>
+        <td>${product.ads}</td>
+        <td>${product.discount}</td>
+        <td>${product.totalPrice}</td>
+        <td>${product.category}</td>
+        <td>
+          <button data-update>Update</button>
+        </td>
+        <td>
+          <button data-delete>Delete</button>
+        </td>
+      </tr>
+    `;
+
+    $tableBody.innerHTML += table;
+  });
 };
 
 $submitBtn.addEventListener("click", () => {
@@ -72,6 +98,9 @@ $submitBtn.addEventListener("click", () => {
   localStorage.setItem("products", JSON.stringify(dataProducts));
 
   clearData();
+  showData();
 
   console.log(newProduct);
 });
+
+showData();
