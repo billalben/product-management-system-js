@@ -1,0 +1,154 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+input,
+button {
+  outline: none;
+  border: none;
+}
+
+button {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition: 250ms ease;
+}
+
+body {
+  background-color: #222;
+  color: #fff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.crud {
+  max-width: 992px;
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+.head {
+  text-align: center;
+  text-transform: uppercase;
+  margin-block: 2rem 1rem;
+}
+
+.head p {
+  margin-block: 1rem;
+}
+
+input {
+  width: 100%;
+  padding: 1rem;
+  margin-block: 0.5rem;
+  border-radius: 0.25rem;
+  background-color: #111;
+  color: #fff;
+  transition: 0.3s ease;
+}
+
+input:focus {
+  background-color: #000;
+}
+
+.price {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .price {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 578px) {
+  .price {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .price input:nth-child(3) {
+    grid-column: span 2;
+  }
+}
+
+.total-price {
+  background-color: #a00d02;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+.total-price::before {
+  content: "Total: ";
+  font-weight: bold;
+}
+
+.btn-create {
+  width: 50%;
+  height: 48px;
+}
+
+.btn-create,
+.btn-search {
+  margin-block: 0.5rem;
+  margin-inline-start: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-create:hover,
+.btn-search > button:hover,
+table button[data-update]:hover {
+  background-color: #43b443;
+  color: #fff;
+}
+
+table button[data-delete]:hover {
+  background-color: #a00d02;
+  color: #fff;
+}
+
+.btn-search {
+  gap: 1rem;
+}
+
+.btn-search button {
+  flex: 1;
+  height: 48px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block: 1rem;
+  text-align: center;
+}
+
+.products {
+  margin-block: 2rem;
+  overflow-x: auto;
+}
+
+table thead th {
+  text-transform: uppercase;
+}
+
+table th,
+table td {
+  padding: 0.825rem;
+  border-bottom: 1px solid #444;
+}
+
+table tbody tr:nth-child(odd) {
+  background-color: #3b3b3b4d;
+}
