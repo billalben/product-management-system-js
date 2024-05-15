@@ -76,6 +76,7 @@ const showData = () => {
     $tableBody.innerHTML += table;
   });
 
+  $deleteAllBtn.textContent = `Delete All ${dataProducts.length}`;
   $deleteAllBtn.style.display = "block";
 };
 
@@ -100,7 +101,12 @@ $submitBtn.addEventListener("click", () => {
     totalPrice,
   };
 
-  dataProducts.push(newProduct);
+  if (count > 1) {
+    for (let i = 0; i < count; i++) dataProducts.push(newProduct);
+  } else {
+    dataProducts.push(newProduct);
+  }
+
   localStorage.setItem("products", JSON.stringify(dataProducts));
 
   clearData();
@@ -126,4 +132,5 @@ $deleteAllBtn.addEventListener("click", () => {
   localStorage.removeItem("products");
   clearTableBody();
   dataProducts = [];
+  $deleteAllBtn.style.display = "none";
 });
