@@ -12,6 +12,9 @@ const $submitBtn = document.querySelector("[data-submit-btn]");
 const $tableBody = document.querySelector("tbody");
 const $deleteAllBtn = document.querySelector("[data-delete-all]");
 
+let createOrUpdate = "create";
+let updateId = null;
+
 const getTotalPrice = () => {
   if ($priceInput.value === "") {
     $totalPrice.style.backgroundColor = "#a00d02";
@@ -47,7 +50,7 @@ const clearData = () => {
   $categoryInput.value = "";
 };
 
-const showData = () => {
+const showProducts = () => {
   if (dataProducts.length === 0) {
     $deleteAllBtn.style.display = "none";
     return;
@@ -65,10 +68,10 @@ const showData = () => {
         <td>${product.totalPrice}</td>
         <td>${product.category}</td>
         <td>
-          <button data-update>Update</button>
+          <button onclick="updateProduct(${id})" data-update>Update</button>
         </td>
         <td>
-          <button onclick="deleteProduct(id)" data-delete>Delete</button>
+          <button onclick="deleteProduct(${id})" data-delete>Delete</button>
         </td>
       </tr>
     `;
@@ -101,27 +104,36 @@ $submitBtn.addEventListener("click", () => {
     totalPrice,
   };
 
-  if (count > 1) {
-    for (let i = 0; i < count; i++) dataProducts.push(newProduct);
+  if (createOrUpdate === "create") {
+    $totalPrice.style.backgroundColor = "#a00d02";
+    if (count > 1) {
+      for (let i = 0; i < count; i++) dataProducts.push(newProduct);
+    } else {
+      dataProducts.push(newProduct);
+    }
   } else {
-    dataProducts.push(newProduct);
+    dataProducts[updateId] = newProduct;
+    createOrUpdate = "create";
+    $submitBtn.textContent = "Create";
+    $countInput.style.display = "block";
   }
 
   localStorage.setItem("products", JSON.stringify(dataProducts));
 
   clearData();
   clearTableBody();
-  showData();
+  showProducts();
 });
 
-showData();
+showProducts();
 
 const deleteProduct = (id) => {
+  console.log(id);
   dataProducts.splice(id, 1);
   localStorage.setItem("products", JSON.stringify(dataProducts));
 
   clearTableBody();
-  showData();
+  showProducts();
 };
 
 const clearTableBody = () => {
@@ -134,3 +146,20 @@ $deleteAllBtn.addEventListener("click", () => {
   dataProducts = [];
   $deleteAllBtn.style.display = "none";
 });
+
+const updateProduct = (id) => {
+  $titleInput.value = dataProducts[id].title;
+  $priceInput.value = dataProducts[id].price;
+  $taxesInput.value = dataProducts[id].taxes;
+  $adsInput.value = dataProducts[id].ads;
+  $discountInput.value = dataProducts[id].discount;
+  $totalPrice.textContent = dataProducts[id].totalPrice;
+  $categoryInput.value = dataProducts[id].category;
+  $countInput.style.display = "none";
+
+  $submitBtn.textContent = "Update";
+  createOrUpdate = "update";
+  updateId = id;
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
