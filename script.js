@@ -175,22 +175,29 @@ const showProducts = (dataProducts) => {
 $submitBtn.addEventListener("click", () => {
   const newProduct = {
     title: $titleInput.value,
-    price: $priceInput.value,
-    taxes: $taxesInput.value,
-    ads: $adsInput.value,
-    discount: $discountInput.value,
+    price: parseInt($priceInput.value) || 0,
+    taxes: parseInt($taxesInput.value) || 0,
+    ads: parseInt($adsInput.value) || 0,
+    discount: parseInt($discountInput.value) || 0,
     category: $categoryInput.value,
-    totalPrice: parseFloat($totalPrice.textContent),
+    totalPrice: parseInt($totalPrice.textContent) || 0,
   };
+
+  if (checkInputBeforeSubmit(newProduct)) {
+    alert("Please fill title, input might be not minus");
+    return;
+  }
 
   if (createOrUpdate === "create") {
     $totalPrice.style.backgroundColor = "#a00d02";
-    if (count > 1) {
-      for (let i = 0; i < count; i++) dataProducts.push(newProduct);
+    const countInput = parseInt($countInput.value);
+
+    if (countInput > 1) {
+      for (let i = 0; i < countInput; i++) dataProducts.push(newProduct);
     } else {
       dataProducts.push(newProduct);
     }
-  } else {
+  } else if (createOrUpdate === "update") {
     dataProducts[updateId] = newProduct;
     createOrUpdate = "create";
     $submitBtn.textContent = "Create";
@@ -201,7 +208,7 @@ $submitBtn.addEventListener("click", () => {
 
   clearData();
   clearTableBody();
-  showProducts();
+  showProducts(dataProducts);
 });
 
 showProducts(dataProducts);
@@ -315,3 +322,17 @@ btnsFilter.forEach((btn) => {
     searchProduct();
   });
 });
+
+const checkInputBeforeSubmit = (product) => {
+  return (
+    product.title === "" ||
+    typeof product.price !== "number" ||
+    product.price < 0 ||
+    typeof product.taxes !== "number" ||
+    product.taxes < 0 ||
+    typeof product.ads !== "number" ||
+    product.ads < 0 ||
+    typeof product.discount !== "number" ||
+    product.discount < 0
+  );
+};
