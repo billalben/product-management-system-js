@@ -1,5 +1,89 @@
 "use strict";
 
+const productsExample = [
+  {
+    title: "macbook pro",
+    category: "laptop",
+    price: 2000,
+    ads: 50,
+    discount: 10,
+    taxes: 20,
+    totalPrice: 2060,
+  },
+  {
+    title: "iphone 12",
+    category: "smartphone",
+    price: 1000,
+    ads: 20,
+    discount: 5,
+    taxes: 10,
+    totalPrice: 1025,
+  },
+  {
+    title: "ipad pro",
+    category: "tablet",
+    price: 800,
+    ads: 10,
+    discount: 2,
+    taxes: 8,
+    totalPrice: 816,
+  },
+  {
+    title: "apple watch",
+    category: "smartwatch",
+    price: 400,
+    ads: 5,
+    discount: 1,
+    taxes: 4,
+    totalPrice: 408,
+  },
+  {
+    title: "samsumg galaxy s21",
+    category: "smartphone",
+    price: 900,
+    ads: 10,
+    discount: 5,
+    taxes: 9,
+    totalPrice: 914,
+  },
+  {
+    title: "samsumg galaxy tab",
+    category: "tablet",
+    price: 500,
+    ads: 5,
+    discount: 2,
+    taxes: 5,
+    totalPrice: 508,
+  },
+  {
+    title: "asus zenbook",
+    category: "laptop",
+    price: 1500,
+    ads: 30,
+    discount: 5,
+    taxes: 15,
+    totalPrice: 1540,
+  },
+  {
+    title: "asus rog phone",
+    category: "smartphone",
+    price: 700,
+    ads: 10,
+    discount: 5,
+    taxes: 7,
+    totalPrice: 712,
+  },
+  {
+    title: "asus zenwatch",
+    category: "smartwatch",
+    price: 300,
+    ads: 5,
+    discount: 1,
+    taxes: 3,
+    totalPrice: 307,
+  },
+];
+
 const $titleInput = document.querySelector("[data-input-title]");
 const $priceInput = document.querySelector("[data-input-price]");
 const $taxesInput = document.querySelector("[data-input-tax]");
@@ -14,6 +98,9 @@ const $deleteAllBtn = document.querySelector("[data-delete-all]");
 
 let createOrUpdate = "create";
 let updateId = null;
+
+const btnsFilter = document.querySelectorAll("[data-search-filter] button");
+btnsFilter[0].classList.add("active");
 
 const getTotalPrice = () => {
   if ($priceInput.value === "") {
@@ -37,6 +124,8 @@ let dataProducts = [];
 
 if (localStorage.getItem("products")) {
   dataProducts = JSON.parse(localStorage.getItem("products"));
+} else {
+  dataProducts = productsExample;
 }
 
 const clearData = () => {
@@ -50,7 +139,7 @@ const clearData = () => {
   $categoryInput.value = "";
 };
 
-const showProducts = () => {
+const showProducts = (dataProducts) => {
   if (dataProducts.length === 0) {
     $deleteAllBtn.style.display = "none";
     return;
@@ -84,24 +173,14 @@ const showProducts = () => {
 };
 
 $submitBtn.addEventListener("click", () => {
-  const title = $titleInput.value;
-  const price = $priceInput.value;
-  const taxes = $taxesInput.value;
-  const ads = $adsInput.value;
-  const discount = $discountInput.value;
-  const count = $countInput.value;
-  const category = $categoryInput.value;
-  const totalPrice = parseFloat($totalPrice.textContent);
-
   const newProduct = {
-    title,
-    price,
-    taxes,
-    ads,
-    discount,
-    count,
-    category,
-    totalPrice,
+    title: $titleInput.value,
+    price: $priceInput.value,
+    taxes: $taxesInput.value,
+    ads: $adsInput.value,
+    discount: $discountInput.value,
+    category: $categoryInput.value,
+    totalPrice: parseFloat($totalPrice.textContent),
   };
 
   if (createOrUpdate === "create") {
@@ -125,15 +204,14 @@ $submitBtn.addEventListener("click", () => {
   showProducts();
 });
 
-showProducts();
+showProducts(dataProducts);
 
 const deleteProduct = (id) => {
-  console.log(id);
   dataProducts.splice(id, 1);
   localStorage.setItem("products", JSON.stringify(dataProducts));
 
   clearTableBody();
-  showProducts();
+  showProducts(dataProducts);
 };
 
 const clearTableBody = () => {
@@ -141,7 +219,7 @@ const clearTableBody = () => {
 };
 
 $deleteAllBtn.addEventListener("click", () => {
-  localStorage.removeItem("products");
+  localStorage.setItem("products", JSON.stringify([]));
   clearTableBody();
   dataProducts = [];
   $deleteAllBtn.style.display = "none";
@@ -163,3 +241,77 @@ const updateProduct = (id) => {
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
+
+let searchMood = "title";
+const $searchInput = document.querySelector("[data-search-input]");
+
+const getSearchMood = (mood) => {
+  mood === "searchCategory"
+    ? (searchMood = "category")
+    : (searchMood = "title");
+
+  $searchInput.placeholder = `Search by ${searchMood}`;
+  $searchInput.focus();
+  $searchInput.value = "";
+};
+
+const debounce = (func, delay = 500) => {
+  let timeout;
+
+  return function (...args) {
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      func.apply(this, args); // Call the original function with arguments
+    }, delay);
+  };
+};
+
+const searchProduct = function () {
+  // console.log($searchInput.value); // console.log(this.value);
+
+  const noProducts = `<tr><td colspan="10" class="no-products">No product found</td></tr>`;
+  const searchValue = $searchInput.value.trim().toLowerCase();
+  let filteredProducts = null;
+
+  if (searchValue === "") {
+    clearTableBody();
+    showProducts(dataProducts);
+    return;
+  }
+
+  if (searchMood === "category") {
+    filteredProducts = dataProducts.filter((product) =>
+      product.category.toLowerCase().includes(searchValue)
+    );
+
+    if (filteredProducts.length === 0) {
+      clearTableBody();
+      $tableBody.innerHTML = noProducts;
+    } else {
+      clearTableBody();
+      showProducts(filteredProducts);
+    }
+  } else {
+    filteredProducts = dataProducts.filter((product) =>
+      product.title.toLowerCase().includes(searchValue)
+    );
+
+    if (filteredProducts.length === 0) {
+      clearTableBody();
+      $tableBody.innerHTML = noProducts;
+    } else {
+      clearTableBody();
+      showProducts(filteredProducts);
+    }
+  }
+};
+
+$searchInput.addEventListener("input", debounce(searchProduct));
+
+btnsFilter.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    btnsFilter.forEach((btn) => btn.classList.toggle("active"));
+    searchProduct();
+  });
+});

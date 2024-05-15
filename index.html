@@ -56,10 +56,22 @@
 
       <div class="outputs">
         <div class="search-block">
-          <input type="text" placeholder="search" data-search />
-          <div class="btn-search">
-            <button data-search-by-title>Search by title</button>
-            <button data-search-by-category>Search by category</button>
+          <input type="text" placeholder="search" data-search-input />
+          <div data-search-filter>
+            <button
+              onclick="getSearchMood(this.id)"
+              id="searchTitle"
+              data-search-by-title
+            >
+              Search by title
+            </button>
+            <button
+              onclick="getSearchMood(this.id)"
+              id="searchCategory"
+              data-search-by-category
+            >
+              Search by category
+            </button>
           </div>
         </div>
 

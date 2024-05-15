@@ -105,7 +105,7 @@ input:focus {
 }
 
 .btn-create,
-.btn-search {
+[data-search-filter] {
   margin-block: 0.5rem;
   margin-inline-start: auto;
   display: flex;
@@ -114,8 +114,10 @@ input:focus {
 }
 
 .btn-create:hover,
-.btn-search > button:hover,
-table button[data-update]:hover {
+[data-search-filter] > button:hover,
+table button[data-update]:hover,
+button[data-search-by-category].active,
+button[data-search-by-title].active {
   background-color: #43b443;
   color: #fff;
 }
@@ -126,11 +128,11 @@ table button[data-delete]:hover,
   color: #fff;
 }
 
-.btn-search {
+[data-search-filter] {
   gap: 1rem;
 }
 
-.btn-search button {
+[data-search-filter] button {
   flex: 1;
   height: 48px;
 }
@@ -159,4 +161,10 @@ table td {
 
 table tbody tr:nth-child(odd) {
   background-color: #3b3b3b4d;
+}
+
+td.no-products {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #a00d02;
 }
